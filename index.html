@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROTOCOL: MATH_HACK_V1</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/generative-ai": "https://esm.run/@google/generative-ai"
+        }
+      }
+    </script>
+    <style>
+        :root {
+            --bg: #000000;
+            --hacker-green: #0f0;
+            --hacker-dark: #003300;
+            --alert: #ff0000;
+            --gold: #ffd700;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--hacker-green);
+            font-family: 'VT323', monospace;
+            margin: 0;
+            padding: 20px;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* MATRIX RAIN BACKGROUND */
+        canvas {
+            position: fixed;
+            top: 0; left: 0;
+            z-index: -1;
+            opacity: 0.2;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 5vh auto;
+            border: 2px solid var(--hacker-green);
+            background: rgba(0, 10, 0, 0.9);
+            padding: 20px;
+            box-shadow: 0 0 30px var(--hacker-green);
+            position: relative;
+            border-radius: 10px;
+        }
+
+        /* HEADER */
+        .header {
+            text-align: center;
+            border-bottom: 2px dashed var(--hacker-green);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .header h1 { margin: 0; font-size: 40px; letter-spacing: 2px; text-shadow: 0 0 10px var(--hacker-green); }
+        .header p { margin: 5px 0; color: #aaa; font-size: 18px; }
+
+        /* LOGIN GRID */
+        .player-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+        }
+        .player-btn {
+            background: black;
+            border: 1px solid var(--hacker-green);
+            color: var(--hacker-green);
+            padding: 15px;
+            font-family: 'VT323', monospace;
+            font-size: 24px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+        .player-btn:hover {
+            background: var(--hacker-green);
+            color: black;
+            box-shadow: 0 0 15px var(--hacker-green);
+            transform: scale(1.05);
+        }
+
+        /* GAME AREA */
+        .hidden { display: none; }
+        
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            font-size: 28px;
+            border: 1px solid var(--hacker-dark);
+            padding: 10px;
+            background: black;
+            margin-bottom: 20px;
+        }
+
+        .question-box {
+            font-size: 50px;
+            text-align: center;
+            margin: 40px 0;
+            text-shadow: 0 0 10px white;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+        }
+        
+        input {
+            flex: 1;
+            background: black;
+            border: 2px solid var(--hacker-green);
+            color: var(--hacker-green);
+            font-family: 'VT323', monospace;
+            font-size: 30px;
+            padding: 10px;
+            text-align: center;
+            outline: none;
+        }
+        
+        .action-btn {
+            background: var(--hacker-green);
+            color: black;
+            border: none;
+            font-family: 'VT323', monospace;
+            font-size: 24px;
+            padding: 10px 30px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* REWARD POPUP */
+        .overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+        .reward-img {
+            width: 200px; height: 200px;
+            border-radius: 50%;
+            border: 5px solid var(--gold);
+            object-fit: cover;
+            box-shadow: 0 0 50px var(--gold);
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse { 0% {transform: scale(1);} 50% {transform: scale(1.1);} 100% {transform: scale(1);} }
+
+        .money-text {
+            font-size: 80px;
+            color: var(--gold);
+            text-shadow: 0 0 20px var(--gold);
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="matrix"></canvas>
+
+    <div class="container" id="login-screen">
+        <div class="header">
+            <h1>SYSTEM: MATH_HACK_V1</h1>
+            <p>OWNER: VISHAL KUMAR | ACCESS LEVEL: TOP SECRET</p>
+        </div>
+        <p>> SELECT PLAYER IDENTITY:</p>
+        <div class="player-grid" id="player-list">
+            </div>
+    </div>
+
+    <div class="container hidden" id="game-screen">
+        <div class="hud">
+            <span>USER: <span id="p-name" style="color:white">...</span></span>
+            <span>WALLET: <span style="color:var(--gold)">₹<span id="p-wallet">0</span></span></span>
+        </div>
+
+        <div id="q-area">
+            <div style="color: #666">> DECRYPTING CHALLENGE...</div>
+            <div class="question-box" id="question">LOADING AI...</div>
+            
+            <div class="input-area">
+                <input type="number" id="answer" placeholder="ENTER CODE" onkeydown="if(event.key==='Enter') checkAnswer()">
+                <button class="action-btn" onclick="checkAnswer()">EXECUTE</button>
+            </div>
+            <p id="status" style="text-align: center; height: 30px; margin-top: 10px;"></p>
+        </div>
+
+        <div id="reward-overlay" class="overlay hidden">
+            <h2 id="r-title" style="color:var(--hacker-green); font-size:40px;">HACK SUCCESSFUL</h2>
+            <div id="r-content"></div>
+            <button class="action-btn" style="margin-top:20px; background:var(--gold);" onclick="nextLevel()">CONTINUE HACKING</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { GoogleGenerativeAI } from "@google/generative-ai";
+
+        // --- 1. SETTINGS ---
+        // Yahan apni wahi API Key daalo jo pichle steps mein use ki thi
+        const API_KEY = "YOUR_GEMINI_API_KEY_HERE"; 
+        
+        const genAI = new GoogleGenerativeAI(API_KEY);
+        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
+        const players = ["Vikram", "Vicky", "Anshika", "Suhani", "Tamana", "Himani", "Aayansh"];
+        
+        let currentUser = "";
+        let currentBalance = 0;
+        let correctAnswer = 0;
+
+        // --- 2. GAME LOGIC ---
+
+        // Initialize Login Screen
+        const pList = document.getElementById('player-list');
+        players.forEach(name => {
+            const btn = document.createElement('button');
+            btn.className = 'player-btn';
+            btn.innerHTML = `<i class="fas fa-user-secret"></i> ${name}`;
+            btn.onclick = () => login(name);
+            pList.appendChild(btn);
+        });
+
+        window.login = (name) => {
+            currentUser = name;
+            // Load saved money from LocalStorage (Permanent memory)
+            currentBalance = parseInt(localStorage.getItem(`wallet_${name}`)) || 0;
+            
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+            document.getElementById('p-name').innerText = name;
+            updateWallet();
+            generateQuestion();
+        }
+
+        function updateWallet() {
+            document.getElementById('p-wallet').innerText = currentBalance;
+            localStorage.setItem(`wallet_${currentUser}`, currentBalance);
+        }
+
+        async function generateQuestion() {
+            const qEl = document.getElementById('question');
+            qEl.innerText = "DECRYPTING...";
+            document.getElementById('answer').value = "";
+            document.getElementById('answer').focus();
+
+            try {
+                // Asking Gemini for Math
+                const prompt = "Generate one very simple math question (addition or subtraction only) for a 7 year old child. Numbers 1 to 20. Format: 'Question|Answer'. Example: '5 + 3|8'";
+                const result = await model.generateContent(prompt);
+                const response = result.response.text().trim();
+                
+                const parts = response.split('|');
+                if (parts.length === 2) {
+                    qEl.innerText = parts[0];
+                    correctAnswer = parseInt(parts[1]);
+                } else {
+                    throw new Error("Format Fail");
+                }
+            } catch (e) {
+                // Fallback (Agar Internet slow ho)
+                const a = Math.floor(Math.random() * 10) + 1;
+                const b = Math.floor(Math.random() * 10) + 1;
+                qEl.innerText = `${a} + ${b}`;
+                correctAnswer = a + b;
+            }
+        }
+
+        window.checkAnswer = () => {
+            const userAns = parseInt(document.getElementById('answer').value);
+            const status = document.getElementById('status');
+
+            if (userAns === correctAnswer) {
+                status.innerText = "ACCESS GRANTED.";
+                status.style.color = "var(--hacker-green)";
+                giveReward();
+            } else {
+                status.innerText = "ACCESS DENIED. TRY AGAIN.";
+                status.style.color = "var(--alert)";
+                document.getElementById('question').style.color = "red";
+                setTimeout(() => document.getElementById('question').style.color = "var(--hacker-green)", 500);
+            }
+        }
+
+        function giveReward() {
+            const overlay = document.getElementById('reward-overlay');
+            const content = document.getElementById('r-content');
+            const title = document.getElementById('r-title');
+            
+            overlay.classList.remove('hidden');
+
+            // 30% Chance = Photo, 70% Chance = Money
+            const luck = Math.random();
+
+            if (luck > 0.7) {
+                // PHOTO HACK
+                title.innerText = "IDENTITY EXPOSED!";
+                title.style.color = "cyan";
+                // Photos must be in 'photos' folder with lowercase names (e.g. photos/vikram.jpg)
+                content.innerHTML = `
+                    <img src="photos/${currentUser.toLowerCase()}.jpg" class="reward-img" onerror="this.src='https://via.placeholder.com/200/000000/00ff00?text=NO+IMAGE'">
+                    <p style="font-size:24px; margin-top:10px;">RARE DATA FOUND!</p>
+                `;
+                // Bonus for finding photo
+                const bonus = 50;
+                currentBalance += bonus;
+            } else {
+                // MONEY HACK (₹1 to ₹49)
+                const amount = Math.floor(Math.random() * 49) + 1;
+                title.innerText = "CRYPTO MINED!";
+                title.style.color = "var(--gold)";
+                content.innerHTML = `<div class="money-text">+₹${amount}</div>`;
+                currentBalance += amount;
+            }
+            updateWallet();
+        }
+
+        window.nextLevel = () => {
+            document.getElementById('reward-overlay').classList.add('hidden');
+            generateQuestion();
+        }
+
+        // --- MATRIX RAIN EFFECT (Visuals Only) ---
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const letters = "01010101 MATH VISHAL HACK CODE";
+        const drops = Array(Math.floor(canvas.width / 20)).fill(1);
+        
+        function drawMatrix() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#0F0";
+            ctx.font = "15px monospace";
+            drops.forEach((y, i) => {
+                const text = letters[Math.floor(Math.random() * letters.length)];
+                ctx.fillText(text, i * 20, y * 20);
+                if (y * 20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            });
+        }
+        setInterval(drawMatrix, 50);
+
+    </script>
+</body>
+</html>
