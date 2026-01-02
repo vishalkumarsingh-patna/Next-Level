@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MATH HACKER PRO</title>
+    <title>MATH HACKER: NEXT LEVEL</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <script type="importmap">
@@ -14,149 +14,55 @@
       }
     </script>
     <style>
-        :root {
-            --bg: #000000;
-            --green: #0f0;
-            --red: #ff3333;
-            --gold: #ffd700;
-        }
-
-        body {
-            background-color: var(--bg);
-            color: var(--green);
-            font-family: 'VT323', monospace;
-            margin: 0;
-            padding: 10px;
-            height: 100vh;
-            overflow: hidden;
-            user-select: none;
-        }
-
-        /* Container styling */
-        .container {
-            max-width: 600px;
-            margin: 20px auto;
-            border: 2px solid var(--green);
-            background: rgba(0, 20, 0, 0.95);
-            padding: 15px;
-            box-shadow: 0 0 20px var(--green);
-            border-radius: 8px;
-            position: relative;
-        }
-
-        /* HEADER & BACK BUTTON */
-        .header-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px dashed var(--green);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-
-        .back-btn {
-            background: var(--red);
-            color: white;
-            border: none;
-            padding: 5px 15px;
-            font-family: 'VT323', monospace;
-            font-size: 20px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-        .back-btn:hover { background: #cc0000; }
-
-        /* PLAYER GRID */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-        .btn {
-            background: black;
-            border: 1px solid var(--green);
-            color: var(--green);
-            padding: 15px;
-            font-size: 24px;
-            font-family: 'VT323', monospace;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-        .btn:hover { background: var(--green); color: black; }
-
-        /* GAME SCREEN */
-        .hidden { display: none; }
+        :root { --bg: #000; --green: #0f0; --red: #ff3333; --gold: #ffd700; }
+        body { background: var(--bg); color: var(--green); font-family: 'VT323', monospace; margin: 0; padding: 10px; height: 100vh; overflow: hidden; user-select: none; }
         
-        .question-box {
-            font-size: 60px;
-            text-align: center;
-            margin: 30px 0;
-            text-shadow: 0 0 10px white;
-        }
-
+        /* CONTAINER */
+        .container { max-width: 600px; margin: 20px auto; border: 2px solid var(--green); background: rgba(0, 20, 0, 0.95); padding: 15px; box-shadow: 0 0 20px var(--green); border-radius: 8px; position: relative; }
+        
+        /* HEADER */
+        .header-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--green); padding-bottom: 10px; margin-bottom: 20px; }
+        .back-btn { background: var(--red); color: white; border: none; padding: 5px 15px; font-family: 'VT323', monospace; font-size: 20px; cursor: pointer; border-radius: 4px; }
+        
+        /* BUTTONS */
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .btn { background: black; border: 1px solid var(--green); color: var(--green); padding: 15px; font-size: 24px; font-family: 'VT323', monospace; cursor: pointer; text-transform: uppercase; }
+        .btn:hover { background: var(--green); color: black; }
+        
+        /* GAME UI */
+        .hidden { display: none; }
+        .question-box { font-size: 60px; text-align: center; margin: 30px 0; text-shadow: 0 0 10px white; }
         .input-row { display: flex; gap: 10px; }
-        input {
-            flex: 1;
-            background: #000;
-            border: 2px solid var(--green);
-            color: var(--green);
-            font-size: 30px;
-            font-family: 'VT323', monospace;
-            text-align: center;
-            padding: 10px;
-        }
-        .submit-btn {
-            background: var(--green);
-            color: black;
-            border: none;
-            padding: 10px 20px;
-            font-size: 24px;
-            font-family: 'VT323', monospace;
-            cursor: pointer;
-        }
+        input { flex: 1; background: #000; border: 2px solid var(--green); color: var(--green); font-size: 30px; font-family: 'VT323', monospace; text-align: center; padding: 10px; }
+        .submit-btn { background: var(--green); color: black; border: none; padding: 10px 20px; font-size: 24px; font-family: 'VT323', monospace; cursor: pointer; }
 
         /* REWARD POPUP */
-        .popup {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 100;
-        }
-        .photo-frame {
-            width: 200px; height: 200px;
-            border: 4px solid var(--gold);
-            border-radius: 50%;
-            overflow: hidden;
-            box-shadow: 0 0 30px var(--gold);
-            margin: 20px;
-        }
+        .popup { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; }
+        .photo-frame { width: 220px; height: 220px; border: 5px solid var(--gold); border-radius: 50%; overflow: hidden; box-shadow: 0 0 40px var(--gold); margin: 20px; animation: pulse 1s infinite alternate; }
         .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+        @keyframes pulse { from { box-shadow: 0 0 20px var(--gold); } to { box-shadow: 0 0 60px var(--gold); } }
     </style>
 </head>
 <body>
 
     <div class="container" id="screen-login">
-        <h1 style="text-align:center; margin:0;">MATH HACKER</h1>
-        <p style="text-align:center; color:#aaa;">OWNER: VISHAL KUMAR</p>
+        <h1 style="text-align:center; margin:0;">MATH HACKER: NEXT LEVEL</h1>
+        <p style="text-align:center; color:#aaa;">DEV: VISHAL KUMAR | REPO: NEXT-LEVEL</p>
         <hr style="border:0; border-top:1px dashed var(--green); margin:20px 0;">
-        
         <div class="grid" id="player-grid"></div>
     </div>
 
     <div class="container hidden" id="screen-game">
         <div class="header-bar">
             <span>USER: <span id="user-name" style="color:white">...</span></span>
-            <button class="back-btn" onclick="logout()">LOGOUT / BACK</button>
+            <button class="back-btn" onclick="logout()">LOGOUT</button>
         </div>
-
-        <div style="display:flex; justify-content:space-between; font-size:24px; margin-bottom:20px;">
-            <span>WALLET: <span style="color:var(--gold)">₹<span id="wallet-balance">0</span></span></span>
+        <div style="font-size:24px; margin-bottom:20px;">
+            WALLET: <span style="color:var(--gold)">₹<span id="wallet-balance">0</span></span>
         </div>
-
         <div style="text-align:center;">
-            <div style="color:#666">> DECRYPTING QUESTION...</div>
+            <div style="color:#666">> DECRYPTING...</div>
             <div class="question-box" id="q-text">LOADING...</div>
-            
             <div class="input-row">
                 <input type="number" id="ans-input" placeholder="CODE?" onkeydown="if(event.key==='Enter') check()">
                 <button class="submit-btn" onclick="check()">ENTER</button>
@@ -168,30 +74,40 @@
     <div id="reward-popup" class="popup hidden">
         <h1 id="r-title" style="color:var(--gold); font-size:50px;">HACKED!</h1>
         <div id="r-body"></div>
-        <button class="btn" style="margin-top:20px; border-color:var(--gold);" onclick="closeReward()">NEXT LEVEL</button>
+        <button class="btn" style="margin-top:20px; border-color:var(--gold);" onclick="closeReward()">NEXT MISSION</button>
     </div>
 
     <script type="module">
         import { GoogleGenerativeAI } from "@google/generative-ai";
 
-        // --- API KEY CONFIGURATION ---
-        // Agar aapke paas Key nahi hai, toh ye automatically "Offline Mode" mein chalega
-        const API_KEY = "YOUR_GEMINI_API_KEY_HERE"; 
+        // --- 1. CONFIGURATION ---
+        const API_KEY = "YOUR_GEMINI_API_KEY_HERE"; // Paste key if you have it, else Offline Mode works
         
-        const players = ["Vikram", "Vicky", "Anshika", "Suhani", "Tamana", "Himani", "Aayansh"];
+        // --- 2. FILE MAPPING (Fixing your file names) ---
+        // I mapped the names to the EXACT files in your screenshot
+        const players = {
+            "Vikram": "vikram.jpg.jpg",
+            "Vicky": "vicky.jpg.png", 
+            "Anshika": "anshika.jpg.jpg",
+            "Suhani": "suhani.jpg.jpg",
+            "Tamana": "tamana.jpg.png",
+            "Aayansh": "aayansh.jpg.jpg",
+            "Himani": "himani.jpg" // Placeholder if you upload this later
+        };
+
         let currentUser = "";
         let currentAns = 0;
         let balance = 0;
 
         // --- INIT ---
         const grid = document.getElementById('player-grid');
-        players.forEach(p => {
+        for (const [name, file] of Object.entries(players)) {
             const btn = document.createElement('button');
             btn.className = 'btn';
-            btn.innerText = "> " + p;
-            btn.onclick = () => login(p);
+            btn.innerText = "> " + name;
+            btn.onclick = () => login(name);
             grid.appendChild(btn);
-        });
+        }
 
         // --- FUNCTIONS ---
         window.login = (name) => {
@@ -217,37 +133,15 @@
             qText.innerText = "...";
             document.getElementById('msg').innerText = "";
 
-            // 1. Try AI First
-            if (API_KEY !== "YOUR_GEMINI_API_KEY_HERE") {
-                try {
-                    const genAI = new GoogleGenerativeAI(API_KEY);
-                    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-                    const prompt = "Generate a math sum for a kid (add/sub/mul) numbers 1-20. Output ONLY: Question|Answer. Example: 5+5|10";
-                    
-                    const result = await model.generateContent(prompt);
-                    const text = result.response.text().trim();
-                    const parts = text.split('|');
-                    
-                    if(parts.length === 2) {
-                        qText.innerText = parts[0];
-                        currentAns = parseInt(parts[1]);
-                        return; // Exit if AI worked
-                    }
-                } catch(e) {
-                    console.log("AI Failed, switching to Offline Mode");
-                }
-            }
-
-            // 2. Offline Fallback (Agar API fail ho ya Key na ho)
+            // Offline Mode (Math Logic) - Fast & Reliable
             const n1 = Math.floor(Math.random() * 20) + 1;
             const n2 = Math.floor(Math.random() * 10) + 1;
-            const type = Math.random() > 0.5 ? '+' : '-';
+            const isAdd = Math.random() > 0.5;
             
-            if (type === '+') {
+            if (isAdd) {
                 qText.innerText = `${n1} + ${n2}`;
                 currentAns = n1 + n2;
             } else {
-                // Ensure no negative numbers for kids
                 const big = Math.max(n1, n2);
                 const small = Math.min(n1, n2);
                 qText.innerText = `${big} - ${small}`;
@@ -260,10 +154,11 @@
             if (val === currentAns) {
                 showReward();
             } else {
-                document.getElementById('msg').innerText = "WRONG CODE! TRY AGAIN";
-                // Shake animation
-                document.getElementById('ans-input').style.borderColor = "red";
-                setTimeout(() => document.getElementById('ans-input').style.borderColor = "#0f0", 500);
+                document.getElementById('msg').innerText = "ACCESS DENIED!";
+                // Shake effect
+                const input = document.getElementById('ans-input');
+                input.style.borderColor = "red";
+                setTimeout(() => input.style.borderColor = "#0f0", 500);
             }
         }
 
@@ -273,16 +168,18 @@
             const title = document.getElementById('r-title');
             popup.classList.remove('hidden');
 
-            const isPhoto = Math.random() > 0.7; // 30% chance for photo
+            const isPhoto = Math.random() > 0.6; // 40% chance for photo
 
             if (isPhoto) {
                 title.innerText = "IDENTITY FOUND!";
-                // Ensure photos are in 'photos' folder
+                // Using the specific filename map we created
+                const fileName = players[currentUser]; 
+                
                 body.innerHTML = `
                     <div class="photo-frame">
-                        <img src="photos/${currentUser.toLowerCase()}.jpg" onerror="this.src='https://via.placeholder.com/200?text=NO+IMAGE'">
+                        <img src="${fileName}" onerror="this.src='https://via.placeholder.com/200?text=NO+IMAGE'">
                     </div>
-                    <div style="color:cyan; font-size:24px;">BONUS ₹50</div>
+                    <div style="color:cyan; font-size:24px; margin-top:10px;">BONUS ₹50</div>
                 `;
                 balance += 50;
             } else {
